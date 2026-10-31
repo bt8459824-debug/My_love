@@ -1,0 +1,1119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Enter Password</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chewy&family=Caveat:wght@600&family=Gaegu&family=Special+Elite&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f4dfe8;
+        --pink: #e8719e;
+        --deep: #d5557f;
+        --btn1: #e3a3bd;
+        --btn2: #c987a5;
+        --blank: #e6dde2;
+        --ink: #6b5560;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #2a1d24;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #2a1d24;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg);
+      }
+      :root {
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      #stage {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 960px;
+        height: 540px;
+        margin: -270px 0 0 -480px;
+        transform-origin: 50% 50%;
+        overflow: hidden;
+        border-radius: 6px;
+        font-family: "Chewy", cursive;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-user-select: none;
+        user-select: none;
+        touch-action: manipulation;
+      }
+      .pg {
+        position: absolute;
+        inset: 0;
+        display: none;
+        background: linear-gradient(135deg, #fbeef3, #f6dde8);
+      }
+      .pg.on {
+        display: block;
+        z-index: 2;
+        animation: inn 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .pg.out {
+        display: block;
+        z-index: 1;
+        animation: outt 0.5s ease-in forwards;
+      }
+      @keyframes inn {
+        from {
+          opacity: 0;
+          transform: translateX(80px) scale(0.94);
+          filter: blur(6px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+          filter: none;
+        }
+      }
+      @keyframes outt {
+        to {
+          opacity: 0;
+          transform: translateX(-80px) scale(1.04);
+          filter: blur(6px);
+        }
+      }
+      .pg.on .em,
+      .pg.on .pol,
+      .pg.on .pill,
+      .pg.on .ttl {
+        animation: pop 0.6s 0.3s backwards cubic-bezier(0.3, 1.5, 0.5, 1);
+      }
+      @keyframes pop {
+        from {
+          opacity: 0;
+          scale: 0.3;
+        }
+        to {
+          opacity: 1;
+          scale: 1;
+        }
+      }
+      .stripe {
+        background: repeating-linear-gradient(
+          0deg,
+          #fff 0 34px,
+          #f7d4df 34px 68px
+        );
+      }
+      .a {
+        position: absolute;
+      }
+      .em {
+        position: absolute;
+        line-height: 1;
+        user-select: none;
+        filter: drop-shadow(0 3px 4px #0002);
+      }
+      .ttl {
+        position: absolute;
+        color: #f08fb2;
+        font-size: 54px;
+        line-height: 1.15;
+        letter-spacing: 2px;
+        text-shadow: 2px 2px 0 #fff8;
+      }
+      .pill {
+        position: absolute;
+        width: 210px;
+        height: 56px;
+        border-radius: 30px;
+        border: 0;
+        cursor: pointer;
+        font:
+          italic 700 28px "Chewy",
+          cursive;
+        color: #fff;
+        text-decoration: underline;
+        background: linear-gradient(#e9b3c9, var(--btn2));
+        box-shadow:
+          0 4px 0 #b06c8a,
+          0 8px 14px #0003;
+        transition: transform 0.15s;
+      }
+      .pill:hover {
+        transform: translateY(-3px) scale(1.04);
+      }
+      .pill:active {
+        transform: translateY(2px);
+      }
+      .pol {
+        position: absolute;
+        background: #fff;
+        padding: 9px 9px 34px;
+        box-shadow: 0 6px 14px #0003;
+      }
+      .pol i {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: var(--blank);
+      }
+
+      /* Rotatable photo box.
+         Change --rot on the .r div to turn the photo (0deg, 90deg, 180deg, 270deg).
+         Add the class "q" when the rotation is 90deg or 270deg so it still fills the frame. */
+      .pol .r {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        container-type: size;
+        background: var(--blank);
+      }
+      .pol .r img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100cqw;
+        height: 100cqh;
+        object-fit: cover;
+        transform: translate(-50%, -50%) rotate(var(--rot, 0deg));
+      }
+      .pol .r.q img {
+        width: 100cqh;
+        height: 100cqw;
+      }
+
+      .note {
+        position: absolute;
+        font-family: "Caveat", cursive;
+        color: #8a6a55;
+      }
+      .nxt {
+        position: absolute;
+        font:
+          600 30px "Caveat",
+          cursive;
+        color: #5b6fa8;
+        text-decoration: underline;
+        cursor: pointer;
+        background: none;
+        border: 0;
+      }
+      .paper {
+        position: absolute;
+        background: #e3f1dd;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px #0002;
+        padding: 22px 26px;
+        font:
+          20px/1.5 "Gaegu",
+          cursive;
+        color: #6c7d68;
+      }
+      .kp {
+        position: absolute;
+        left: 640px;
+        top: 36px;
+        width: 270px;
+        height: 470px;
+        background: #ee7fa5;
+        border-radius: 26px;
+        border: 7px dotted #f8c3d6;
+        box-shadow: 0 0 0 6px #ee7fa5 inset;
+        padding: 18px 20px;
+        text-align: center;
+        color: #fff;
+        font:
+          700 15px "Chewy",
+          cursive;
+        letter-spacing: 2px;
+      }
+      .keys {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px 12px;
+        margin-top: 22px;
+      }
+      .k {
+        aspect-ratio: 1;
+        border-radius: 50%;
+        border: 3px solid #f8c3d6;
+        background: #fff;
+        color: #e8719e;
+        font:
+          700 24px "Chewy",
+          cursive;
+        cursor: pointer;
+        box-shadow: inset 0 0 0 3px #fde6ee;
+      }
+      .k.h {
+        background: #fbd0df;
+        border-color: #fff;
+      }
+      .del {
+        display: block;
+        margin: 14px auto 0;
+        width: 100%;
+        height: 42px;
+        border-radius: 24px;
+        border: 3px solid #f8c3d6;
+        background: #fbd0df;
+        color: #e8719e;
+        font:
+          700 20px "Chewy",
+          cursive;
+        letter-spacing: 2px;
+        cursor: pointer;
+        box-shadow: 0 3px 0 #b06c8a;
+        transition: transform 0.15s;
+      }
+      .del:active {
+        transform: translateY(2px);
+      }
+      .sh {
+        animation: sh 0.4s;
+      }
+      @keyframes sh {
+        25% {
+          transform: translateX(-10px);
+        }
+        75% {
+          transform: translateX(10px);
+        }
+      }
+      .music {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        z-index: 10;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        border: 3px solid #fff;
+        background: linear-gradient(#e9b3c9, var(--btn2));
+        color: #fff;
+        font-size: 22px;
+        cursor: pointer;
+        box-shadow:
+          0 3px 0 #b06c8a,
+          0 6px 12px #0003;
+        transition: transform 0.15s;
+      }
+      .music:hover {
+        transform: scale(1.1);
+      }
+      .music:active {
+        transform: scale(0.95);
+      }
+      .music::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 34px;
+        height: 4px;
+        border-radius: 2px;
+        background: #fff;
+        box-shadow: 0 0 0 1.5px #b06c8a;
+        transform: translate(-50%, -50%) rotate(-45deg) scaleX(0);
+        transition: transform 0.25s;
+      }
+      .music.playing::after {
+        transform: translate(-50%, -50%) rotate(-45deg) scaleX(1);
+      }
+      .pwbox {
+        margin: 16px auto 0;
+        height: 48px;
+        width: 100%;
+        border-radius: 14px;
+        background: #fff;
+        border: 3px solid #f8c3d6;
+        color: #e8719e;
+        font:
+          700 28px/42px "Chewy",
+          cursive;
+        letter-spacing: 12px;
+        text-align: center;
+        box-shadow: inset 0 2px 6px #e8719e33;
+      }
+      .pwbox:empty::after {
+        content: "\00b7 \00b7 \00b7 \00b7 \00b7 \00b7 \00b7";
+        color: #f3c3d3;
+      }
+      .paper.typing::after {
+        content: "\258d";
+        color: #8aa085;
+        animation: bl 0.7s steps(1) infinite;
+      }
+      @keyframes bl {
+        50% {
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="stage">
+      <button class="music" onclick="toggleMusic()" aria-label="Music">
+        ♫
+      </button>
+
+      <!-- 1: SURPRISE -->
+      <section class="pg on" id="p1">
+        <span class="em" style="left: 6px; top: 20px; font-size: 84px">🌸</span>
+        <span class="em" style="left: 10px; top: 150px; font-size: 60px"
+          >🎀</span
+        >
+        <span
+          class="em"
+          style="
+            left: 480px;
+            top: 30px;
+            font-size: 96px;
+            transform: rotate(-8deg);
+          "
+          >💋</span
+        >
+        <span
+          class="note"
+          style="
+            left: 200px;
+            top: 34px;
+            font-size: 30px;
+            transform: rotate(-4deg);
+          "
+          >Favorite<br />Person ↴</span
+        >
+        <div
+          class="a"
+          style="
+            left: 80px;
+            top: 118px;
+            width: 400px;
+            height: 268px;
+            border-radius: 26px;
+            background: linear-gradient(145deg, #e1ebe3, #b9cbbd);
+            box-shadow: 0 10px 22px #0003;
+            transform: rotate(-3deg);
+          "
+        >
+          <div
+            class="a"
+            style="
+              left: 30px;
+              top: 44px;
+              width: 236px;
+              height: 176px;
+              border-radius: 12px;
+              background: var(--blank);
+              border: 8px solid #2b2f2e;
+              overflow: hidden;
+            "
+          >
+            <img src="bhabhi4.jpg" style="width: 225px; height: 175px" />
+          </div>
+          <div
+            class="a"
+            style="
+              left: 292px;
+              top: 62px;
+              width: 84px;
+              height: 84px;
+              border-radius: 50%;
+              background: #aebcb1;
+              border: 7px solid #dfe8e1;
+              box-shadow: inset 0 0 0 10px #8ea093;
+            "
+          ></div>
+          <div
+            class="a"
+            style="
+              left: 300px;
+              top: 14px;
+              width: 70px;
+              height: 26px;
+              border-radius: 5px;
+              background: #9eb0a2;
+            "
+          ></div>
+        </div>
+        <span class="em" style="left: 430px; top: 230px; font-size: 70px"
+          >💐</span
+        >
+        <div
+          class="ttl"
+          style="left: 560px; top: 96px; transform: rotate(-2deg)"
+        >
+          DO YOU<br />WANT A<br />SURPRISE??
+        </div>
+        <button class="pill" style="left: 290px; top: 428px" onclick="go(3)">
+          YES !!
+        </button>
+        <button class="pill" style="left: 540px; top: 428px" onclick="go(2)">
+          NO!!
+        </button>
+        <span
+          class="note"
+          style="
+            left: 20px;
+            top: 470px;
+            font-size: 20px;
+            font-family: &quot;Caveat&quot;;
+          "
+          >"you are my sun,<br />my moon,<br />and all of my stars."</span
+        >
+      </section>
+
+      <!-- 2: TRY AGAIN -->
+      <section class="pg" id="p2">
+        <span
+          class="em"
+          style="left: 700px; top: 14px; font-size: 60px; opacity: 0.6"
+          >⭐</span
+        >
+        <span
+          class="em"
+          style="left: 820px; top: 30px; font-size: 40px; opacity: 0.6"
+          >✨</span
+        >
+        <span
+          class="em"
+          style="left: 430px; top: 380px; font-size: 40px; opacity: 0.5"
+          >⭐</span
+        >
+        <span
+          class="em"
+          style="left: 30px; top: 30px; font-size: 44px; opacity: 0.5"
+          >✨</span
+        >
+        <div
+          class="a"
+          style="
+            left: 60px;
+            top: 70px;
+            width: 330px;
+            height: 330px;
+            /* border-radius: 46% 46% 40% 40%; */
+            background: var(--blank);
+            border: 10px solid #fff;
+            box-shadow: 0 8px 18px #0003;
+            display: grid;
+            place-items: center;
+            font-size: 120px;
+          "
+        >
+          <div
+            class="tenor-gif-embed"
+            data-postid="22962113"
+            data-share-method="host"
+            data-aspect-ratio="1"
+            data-width="100%"
+          >
+            <a href="https://tenor.com/view/omg-cat-no-cry-gif-22962113"
+              >Omg Cat GIF</a
+            >from <a href="https://tenor.com/search/omg-gifs">Omg GIFs</a>
+          </div>
+          <script
+            type="text/javascript"
+            async
+            src="https://tenor.com/embed.js"
+          ></script>
+        </div>
+        <div
+          class="ttl"
+          style="
+            left: 450px;
+            top: 96px;
+            font-size: 62px;
+            text-align: center;
+            line-height: 1.3;
+            color: #ee7da6;
+          "
+        >
+          NOOOO!!!<br />TRY AGAIN
+        </div>
+        <span class="em" style="left: 430px; top: 340px; font-size: 84px"
+          >💗</span
+        >
+        <span class="em" style="left: 800px; top: 340px; font-size: 84px"
+          >💗</span
+        >
+        <button
+          class="pill"
+          style="left: 560px; top: 368px; width: 220px"
+          onclick="go(1)"
+        >
+          <audio src="Bela Bose (PenduJatt.dev).mp3" loop id="audio"></audio>
+          &lt;&lt;BACKK
+        </button>
+      </section>
+
+      <!-- 3: PASSWORD -->
+      <section class="pg stripe" id="p3">
+        <svg
+          class="a"
+          style="left: 30px; top: 50px"
+          width="560"
+          height="470"
+          viewBox="0 0 200 190"
+        >
+          <defs>
+            <clipPath id="hc">
+              <path d="M100 178C-30 90 20 5 100 52 180 5 230 90 100 178Z" />
+            </clipPath>
+          </defs>
+          <path
+            d="M100 184C-38 92 14 -4 100 50 186 -4 238 92 100 184Z"
+            fill="none"
+            stroke="#f6b6cc"
+            stroke-width="16"
+            stroke-linecap="round"
+            stroke-dasharray="0 14"
+          />
+          <path
+            d="M100 178C-30 90 20 5 100 52 180 5 230 90 100 178Z"
+            fill="#fff"
+            stroke="#fff"
+            stroke-width="10"
+          />
+          <g clip-path="url(#hc)">
+            <image
+              x="-10"
+              y="10"
+              width="180"
+              height="180"
+              href="bhabhi1.jpg"
+              preserveAspectRatio="xMidYMid slice"
+              transform="rotate(270 100 100)"
+            />
+          </g>
+        </svg>
+        <span class="em" style="left: 340px; top: 350px; font-size: 150px"
+          >🧸</span
+        >
+        <div class="kp" id="kp">
+          <div>ENTER PASSWORD 🔒</div>
+          <div class="pwbox" id="pw"></div>
+          <div class="keys" id="keys"></div>
+          <button class="del" id="del">⌫ DELETE</button>
+        </div>
+      </section>
+
+      <!-- 4: BIRTHDAY COLLAGE -->
+      <section class="pg stripe" id="p4">
+        <div
+          class="a"
+          style="
+            inset: 0 auto 0 0;
+            width: 330px;
+            background: #f06fa0;
+            clip-path: polygon(0 0, 100% 0, 60% 100%, 0 100%);
+          "
+        ></div>
+        <span class="em" style="left: 80px; top: 20px; font-size: 76px"
+          >🍓</span
+        >
+        <span
+          class="em"
+          style="
+            left: 20px;
+            top: 40px;
+            font-size: 60px;
+            filter: hue-rotate(300deg);
+          "
+          >⭐</span
+        >
+        <span class="em" style="left: 36px; top: 210px; font-size: 70px"
+          >📷</span
+        >
+        <div
+          class="note"
+          style="
+            left: 200px;
+            top: 70px;
+            font-size: 26px;
+            color: #fff;
+            background: #f4a3bf;
+            padding: 6px 14px;
+            transform: rotate(-6deg);
+          "
+        >
+          "All mine?"<br />"All yours."
+        </div>
+
+        <div
+          class="pol"
+          style="
+            left: 340px;
+            top: 30px;
+            width: 200px;
+            height: 230px;
+            transform: rotate(4deg);
+          "
+        >
+          <div class="r q" style="--rot: 270deg">
+            <img src="bhabhi5.jpg" />
+          </div>
+        </div>
+        <div
+          class="a"
+          style="
+            left: 560px;
+            top: 60px;
+            width: 190px;
+            height: 190px;
+            background: #e8c9a6;
+            border-radius: 10px;
+            padding: 18px;
+            font:
+              18px/1.3 &quot;Caveat&quot;,
+              cursive;
+            color: #7a5a45;
+            transform: rotate(3deg);
+          "
+        >
+          Making memories with you is my favorite thing to do.
+        </div>
+        <span class="em" style="left: 780px; top: 70px; font-size: 84px"
+          >💗</span
+        >
+        <div
+          class="pol"
+          style="
+            left: 60px;
+            top: 300px;
+            width: 210px;
+            height: 200px;
+            transform: rotate(-5deg);
+          "
+        >
+          <div class="r q" style="--rot: 270deg">
+            <img src="bhabhi6.jpg" />
+          </div>
+        </div>
+        <span class="em" style="left: 300px; top: 340px; font-size: 100px"
+          >💐</span
+        >
+        <div
+          class="a"
+          style="
+            left: 410px;
+            top: 300px;
+            font:
+              84px/1 &quot;Chewy&quot;,
+              cursive;
+            color: #7a4fc7;
+            text-shadow:
+              3px 3px 0 #fff,
+              6px 6px 0 #f5d44b;
+            transform: rotate(-3deg);
+          "
+        >
+          HAPPY<br /><span style="color: #f06fa0">BIRTHDAY</span>
+        </div>
+        <div
+          class="note"
+          style="left: 20px; top: 250px; font-size: 20px; color: #7a6a70"
+        >
+          "You are my sun,<br />my moon,<br />and all of my stars."
+        </div>
+        <button class="nxt" style="left: 200px; top: 496px" onclick="go(5)">
+          Next&gt;&gt;
+        </button>
+      </section>
+
+      <!-- 5: LETTER FOR YOU -->
+      <section
+        class="pg"
+        id="p5"
+        style="
+          background: repeating-linear-gradient(
+            90deg,
+            #fff 0 38px,
+            #f6d9e3 38px 76px
+          );
+        "
+      >
+        <div
+          class="a"
+          style="left: 60px; top: 0; font-size: 60px; letter-spacing: 4px"
+        >
+          🚩🚩🚩🚩
+        </div>
+        <div
+          class="a"
+          style="
+            left: 60px;
+            top: 150px;
+            width: 260px;
+            height: 290px;
+            border-radius: 50% 50% 36% 36%;
+            background: var(--blank);
+            border: 10px solid #fff;
+            display: grid;
+            place-items: center;
+            font-size: 130px;
+            box-shadow: 0 8px 18px #0003;
+          "
+        >
+          🐱
+        </div>
+        <span class="em" style="left: 130px; top: 100px; font-size: 90px"
+          >🎉</span
+        >
+        <div
+          class="a"
+          id="env"
+          style="
+            left: 350px;
+            top: 140px;
+            width: 420px;
+            height: 290px;
+            background: linear-gradient(135deg, #fff, #efe9ea);
+            border-radius: 10px;
+            box-shadow: 0 10px 24px #0003;
+            transform: rotate(-8deg);
+            cursor: pointer;
+          "
+          onclick="go(6)"
+        >
+          <div
+            class="a"
+            style="
+              inset: 0;
+              clip-path: polygon(0 0, 100% 0, 50% 58%);
+              background: #f3eded;
+            "
+          ></div>
+          <span
+            class="em"
+            style="left: 100px; top: 90px; font-size: 40px; color: #e55"
+            >❤</span
+          >
+          <div
+            class="a"
+            style="
+              right: 30px;
+              top: 100px;
+              font:
+                700 30px/1.3 &quot;Chewy&quot;,
+                cursive;
+              color: #555;
+              text-align: center;
+            "
+          >
+            LETTER<br />FOR YOU
+          </div>
+        </div>
+        <span class="em" style="left: 700px; top: 90px; font-size: 56px"
+          >🌼</span
+        ><span class="em" style="left: 830px; top: 180px; font-size: 56px"
+          >🌸</span
+        >
+        <span class="em" style="left: 780px; top: 380px; font-size: 56px"
+          >🌼</span
+        ><span class="em" style="left: 380px; top: 70px; font-size: 50px"
+          >🌸</span
+        >
+        <div
+          class="note"
+          style="left: 360px; top: 460px; font-size: 28px; color: #555"
+        >
+          click ↗
+        </div>
+      </section>
+
+      <!-- 6: LETTER -->
+      <section
+        class="pg"
+        id="p6"
+        style="background: linear-gradient(135deg, #fceef3, #f6d6e3)"
+      >
+        <div
+          class="pol"
+          style="
+            left: 50px;
+            top: 30px;
+            width: 240px;
+            height: 290px;
+            transform: rotate(-6deg);
+          "
+        >
+          <div class="r" style="--rot: 0deg">
+            <img src="bhabhi7.jpg" />
+          </div>
+        </div>
+        <span class="em" style="left: 300px; top: 30px; font-size: 120px"
+          >💐</span
+        >
+        <span class="em" style="left: 20px; top: 380px; font-size: 120px"
+          >🎂</span
+        >
+        <span class="em" style="left: 420px; top: 450px; font-size: 70px"
+          >💋</span
+        >
+        <div
+          class="paper"
+          style="left: 330px; top: 50px; width: 590px; height: 430px"
+        >
+          Happy Birthday to the most special person in my life. You are not just
+          my friend, but my most special person, my biggest supporter, and the
+          person who makes my days brighter. I love that we've grown up together
+          and I also love that we'll continue to grow up together. I don't think
+          I say this enough, but I feel incredibly lucky to have you in my life.
+          Out of everyone, somehow I got you, and that still surprises me the
+          best way. The way you care, the way you listen, the way you stay… it
+          means more to me than I can ever properly explain.
+        </div>
+        <button class="nxt" style="left: 870px; top: 490px" onclick="go(7)">
+          Next&gt;&gt;
+        </button>
+      </section>
+
+      <!-- 7: FINAL COLLAGE -->
+      <section class="pg stripe" id="p7">
+        <div
+          class="a"
+          style="
+            left: 300px;
+            top: 14px;
+            font:
+              78px/1 &quot;Chewy&quot;,
+              cursive;
+            color: #f06fa0;
+            letter-spacing: 6px;
+            text-shadow: 3px 3px 0 #fff;
+          "
+        >
+          MY PRETTY<br /><span style="margin-left: 60px">GIRL</span>
+        </div>
+        <span class="em" style="left: 20px; top: 10px; font-size: 70px">🌸</span
+        ><span class="em" style="left: 860px; top: 20px; font-size: 60px"
+          >🦋</span
+        >
+        <div
+          class="pol"
+          style="
+            left: 60px;
+            top: 150px;
+            width: 190px;
+            height: 230px;
+            transform: rotate(-4deg);
+          "
+        >
+          <div class="r" style="--rot: 90deg">
+            <img src="bhabhi8.jpg" />
+          </div>
+        </div>
+        <div
+          class="pol"
+          style="
+            left: 300px;
+            top: 260px;
+            width: 230px;
+            height: 220px;
+            transform: rotate(3deg);
+          "
+        >
+          <div class="r" style="--rot: 0deg">
+            <img src="bhabhi9.jpg" />
+          </div>
+        </div>
+        <div
+          class="pol"
+          style="
+            left: 640px;
+            top: 170px;
+            width: 210px;
+            height: 250px;
+            transform: rotate(8deg);
+          "
+        >
+          <div class="r" style="--rot: 0deg">
+            <img src="bhabhi10.jpg" />
+          </div>
+        </div>
+        <div
+          class="note"
+          style="
+            left: 50px;
+            top: 420px;
+            font-size: 44px;
+            color: #7a6a70;
+            transform: rotate(-6deg);
+          "
+        >
+          Happy<br />Birthday
+        </div>
+        <div
+          class="a"
+          style="
+            left: 600px;
+            top: 430px;
+            background: #d9a53a;
+            color: #fff;
+            font:
+              600 30px &quot;Caveat&quot;,
+              cursive;
+            padding: 4px 14px;
+          "
+        >
+          I love you,<br />forever and always
+        </div>
+        <span class="em" style="left: 560px; top: 230px; font-size: 50px"
+          >💋</span
+        ><span class="em" style="left: 260px; top: 170px; font-size: 50px"
+          >🌼</span
+        >
+        <button class="nxt" style="left: 20px; top: 500px" onclick="go(1)">
+          ↺ start over
+        </button>
+      </section>
+    </div>
+
+    <script>
+      function toggleMusic() {
+        var b = document.querySelector(".music");
+        var playing = b.classList.toggle("playing");
+        var song = document.getElementById("audio");
+        if (song.paused) {
+          song.play();
+        } else {
+          song.pause();
+        }
+      }
+      var PIN = "2112011"; // change the password here
+      var stage = document.getElementById("stage");
+      function fit() {
+        var w = innerWidth,
+          h = innerHeight,
+          portrait = h > w && w < 820;
+        var s = portrait
+          ? Math.min(h / 960, w / 540)
+          : Math.min(w / 960, h / 540);
+        stage.style.transform =
+          (portrait ? "rotate(90deg) " : "") + "scale(" + s + ")";
+      }
+      addEventListener("resize", fit);
+      addEventListener("orientationchange", function () {
+        setTimeout(fit, 200);
+      });
+      fit();
+      var cur = 1,
+        tm,
+        lt = document.querySelector(".paper"),
+        full = lt.textContent;
+      function typeLetter() {
+        clearInterval(tm);
+        lt.textContent = "";
+        lt.classList.add("typing");
+        var i = 0;
+        tm = setInterval(function () {
+          lt.textContent = full.slice(0, ++i);
+          if (i >= full.length) {
+            clearInterval(tm);
+            lt.classList.remove("typing");
+          }
+        }, 45);
+      }
+      function go(n) {
+        var o = document.getElementById("p" + cur),
+          w = document.getElementById("p" + n);
+        if (o === w) return;
+        o.classList.remove("on");
+        o.classList.add("out");
+        setTimeout(function () {
+          o.classList.remove("out");
+        }, 500);
+        w.classList.add("on");
+        cur = n;
+        clearInterval(tm);
+        if (n == 6) {
+          lt.textContent = "";
+          setTimeout(typeLetter, 800);
+        }
+      }
+
+      var typed = "",
+        pressed = [],
+        keys = document.getElementById("keys"),
+        pw = document.getElementById("pw");
+
+      function clearPad() {
+        document.querySelectorAll(".k").forEach(function (k) {
+          k.classList.remove("h");
+        });
+        typed = "";
+        pressed = [];
+        pw.textContent = "";
+      }
+
+      "123456789*0#".split("").forEach(function (c) {
+        var b = document.createElement("button");
+        b.className = "k";
+        b.textContent = c;
+        b.onclick = function () {
+          if (c == "*" || c == "#") return;
+          if (typed.length >= PIN.length) return; // ignore taps while checking
+          b.classList.add("h");
+          pressed.push(b);
+          typed += c;
+          pw.textContent = typed;
+          if (typed.length == PIN.length) {
+            var ok = typed == PIN,
+              kp = document.getElementById("kp");
+            setTimeout(function () {
+              clearPad();
+              if (ok) {
+                go(4);
+              } else {
+                kp.classList.add("sh");
+                setTimeout(function () {
+                  kp.classList.remove("sh");
+                }, 400);
+              }
+            }, 350);
+          }
+        };
+        keys.appendChild(b);
+      });
+
+      function delLast() {
+        if (!typed.length || typed.length >= PIN.length) return;
+        typed = typed.slice(0, -1);
+        pw.textContent = typed;
+        var b = pressed.pop();
+        if (b && pressed.indexOf(b) === -1) b.classList.remove("h");
+      }
+      document.getElementById("del").onclick = delLast;
+
+      addEventListener("keydown", function (e) {
+        if (cur != 3) return;
+        if (e.key === "Backspace") {
+          delLast();
+          return;
+        }
+        if (!/^[0-9]$/.test(e.key)) return;
+        [].forEach.call(document.querySelectorAll(".k"), function (k) {
+          if (k.textContent == e.key) k.click();
+        });
+      });
+    </script>
+  </body>
+</html>
